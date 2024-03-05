@@ -1,0 +1,1030 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# NSG フローログの結果をまとめています\r\n\r\nLog Analytics ワークスペースに実行する KQL を変更したい場合は、画面上部の編集ボタンをクリックしてください  \r\n編集モードになったあと、各パーツの編集をすることができます\r\n\r\nブックに関しては下記のページをご確認ください\r\n\r\n[Azure ブックを作成または編集する - Azure Monitor | Microsoft Learn](https://learn.microsoft.com/ja-jp/azure/azure-monitor/visualize/workbooks-create-workbook)\r\n\r\n## パラメータについて\r\nKQL に含める検索対象をパラメータにして外出しにすることが可能です\r\n\r\n編集画面からパラメータを追加してください。  \r\nKQL に含める場合は\r\n```\r\n {TimeRange} \r\n```\r\nのように かっこ でくくります\r\n\r\nクエリの中で文字列として扱う場合は \r\n```\r\n\"{DestIPRange}\" \r\n```\r\nのように引用符を追加します\r\n\r\n## トラフィック量出力レポートとして\r\nパラメータを使わずに、ハードコーディングすることで **トラフィック量出力レポート** とすることが可能です\r\n\r\n## 可視化のオプション\r\nクエリの結果をテーブル形式以外でも表示できます  \r\n- 棒グラフ\r\n- 折れ線グラフ\r\n- etc...\r\n\r\nレポートとして使い勝手がいいものにしてください",
+        "style": "info"
+      },
+      "name": "テキスト - 0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "編集をした後は忘れずに [保存] をしてください",
+        "style": "warning"
+      },
+      "name": "テキスト - 5"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "送信元、宛先をともに入力",
+        "expandable": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                },
+                {
+                  "id": "fc6b894c-b2a8-4dec-8555-bc37005ed7e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SourceIPRange",
+                  "label": "送信元 IP アドレス範囲",
+                  "type": 1,
+                  "description": "送信元 IP アドレスを CIDR 形式で記述してください",
+                  "isRequired": true,
+                  "value": "10.1.0.0/24"
+                },
+                {
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DestIPRange",
+                  "label": "宛先 IP アドレス範囲",
+                  "type": 1,
+                  "description": "宛先 IP アドレスを CIDR 形式で記述してください",
+                  "isRequired": true,
+                  "id": "af14b035-0e57-4faf-b622-1c8da548f6be",
+                  "value": "10.1.0.0/24"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| where ipv4_is_in_range(SrcIP_s, \"{SourceIPRange}\")    // 送信元 IP の指定\r\n| where ipv4_is_in_range(DestIP_s, \"{DestIPRange}\")    // 宛先 IP の指定\r\n| summarize sum(OutboundBytes_d) by SrcIP_s, DestIP_s",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ],
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "chartSettings": {
+                "xAxis": "DestIP_s"
+              }
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "送信元、宛先をともに入力"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "送信元、宛先をともに入力 - パラメータにラベルを利用 -",
+        "expandable": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                },
+                {
+                  "id": "fc6b894c-b2a8-4dec-8555-bc37005ed7e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SourceIPRange",
+                  "label": "送信元 IP アドレス範囲",
+                  "type": 2,
+                  "description": "送信元 IP アドレスを ラベルから選択してください",
+                  "isRequired": true,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\r\n    { \"value\":\"10.0.0.0/24\", \"label\":\"大阪\", \"group\":\"オンプレミス\" },\r\n    { \"value\":\"10.0.1.0/24\", \"label\":\"東京\", \"group\":\"オンプレミス\" },\r\n    { \"value\":\"10.1.0.0/24\", \"label\":\"Spoke01\", \"group\":\"Azure (本番環境)\" },\r\n    { \"value\":\"10.1.1.0/24\", \"label\":\"Spoke02\", \"group\":\"Azure (本番環境)\" },\r\n    { \"value\":\"10.2.0.0/24\", \"label\":\"Spoke03\", \"selected\":true, \"group\":\"Azure (テスト環境)\" },\r\n    { \"value\":\"10.2.1.0/24\", \"label\":\"Spoke04\", \"group\":\"Azure (テスト環境)\" }\r\n]",
+                  "value": "10.1.0.0/24"
+                },
+                {
+                  "id": "af14b035-0e57-4faf-b622-1c8da548f6be",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DestIPRange",
+                  "label": "宛先 IP アドレス範囲",
+                  "type": 2,
+                  "description": "宛先 IP アドレスを ラベルから選択してください",
+                  "isRequired": true,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\r\n    { \"value\":\"10.0.0.0/24\", \"label\":\"大阪\", \"group\":\"オンプレミス\" },\r\n    { \"value\":\"10.0.1.0/24\", \"label\":\"東京\", \"group\":\"オンプレミス\" },\r\n    { \"value\":\"10.1.0.0/24\", \"label\":\"Spoke01\", \"group\":\"Azure (本番環境)\" },\r\n    { \"value\":\"10.1.1.0/24\", \"label\":\"Spoke02\", \"group\":\"Azure (本番環境)\" },\r\n    { \"value\":\"10.2.0.0/24\", \"label\":\"Spoke03\", \"selected\":true, \"group\":\"Azure (テスト環境)\" },\r\n    { \"value\":\"10.2.1.0/24\", \"label\":\"Spoke04\", \"group\":\"Azure (テスト環境)\" }\r\n]",
+                  "value": "10.1.0.0/24"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| where ipv4_is_in_range(SrcIP_s, \"{SourceIPRange}\")    // 送信元 IP の指定\r\n| where ipv4_is_in_range(DestIP_s, \"{DestIPRange}\")    // 宛先 IP の指定\r\n| summarize sum(OutboundBytes_d) by SrcIP_s, DestIP_s",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ],
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "chartSettings": {
+                "xAxis": "DestIP_s"
+              }
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "送信元、宛先をともに入力 - パラメータにラベルを利用 -"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "送信元固定で、宛先をすべて出力",
+        "expandable": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                },
+                {
+                  "id": "fc6b894c-b2a8-4dec-8555-bc37005ed7e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SourceIPRange",
+                  "label": "送信元 IP アドレス範囲",
+                  "type": 1,
+                  "description": "送信元 IP アドレスを CIDR 形式で記述してください",
+                  "isRequired": true,
+                  "value": "10.1.0.4/24"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| where ipv4_is_in_range(SrcIP_s, \"{SourceIPRange}\")    // 送信元 IP の指定\r\n| summarize sum(OutboundBytes_d) by SrcIP_s, DestIP_s",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ]
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "送信元固定で、宛先をすべて出力"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "送信元をすべて出力、宛先は固定",
+        "expandable": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                },
+                {
+                  "id": "fc6b894c-b2a8-4dec-8555-bc37005ed7e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DestIPRange",
+                  "label": "宛先 IP アドレス範囲",
+                  "type": 1,
+                  "description": "宛先 IP アドレスを CIDR 形式で記述してください",
+                  "isRequired": true,
+                  "value": "10.1.1.0/24"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| where ipv4_is_in_range(DestIP_s, \"{DestIPRange}\")\r\n| summarize sum(OutboundBytes_d) by SrcIP_s, DestIP_s",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ]
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "送信元をすべて出力、宛先は固定"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "すべて出力",
+        "expandable": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| summarize sum(OutboundBytes_d) by SrcIP_s, DestIP_s",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ]
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "すべて出力"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "送信元、宛先をともに入力。トラフィック量に単価を掛け算する",
+        "expandable": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                },
+                {
+                  "id": "fc6b894c-b2a8-4dec-8555-bc37005ed7e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SourceIPRange",
+                  "label": "送信元 IP アドレス範囲",
+                  "type": 1,
+                  "description": "送信元 IP アドレスを CIDR 形式で記述してください",
+                  "isRequired": true,
+                  "value": "10.1.0.0/24"
+                },
+                {
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DestIPRange",
+                  "label": "宛先 IP アドレス範囲",
+                  "type": 1,
+                  "description": "宛先 IP アドレスを CIDR 形式で記述してください",
+                  "isRequired": true,
+                  "id": "af14b035-0e57-4faf-b622-1c8da548f6be",
+                  "value": "10.1.0.0/24"
+                },
+                {
+                  "id": "cffc6f75-2712-4f20-97ea-b77e00eabecd",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "cost_per_bite",
+                  "label": "バイト当たりのコスト",
+                  "type": 1,
+                  "isRequired": true,
+                  "value": "25"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| where ipv4_is_in_range(SrcIP_s, \"{SourceIPRange}\")    // 送信元 IP の指定\r\n| where ipv4_is_in_range(DestIP_s, \"{DestIPRange}\")    // 宛先 IP の指定\r\n| summarize OutboundByte_total = sum(OutboundBytes_d) by SrcIP_s, DestIP_s\r\n| extend cost = OutboundByte_total * {cost_per_bite}",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ],
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "chartSettings": {
+                "xAxis": "DestIP_s"
+              }
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "送信元、宛先をともに入力。トラフィック量に単価を掛け算する"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
