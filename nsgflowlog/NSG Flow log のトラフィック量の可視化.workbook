@@ -1021,6 +1021,236 @@
         ]
       },
       "name": "送信元、宛先をともに入力。トラフィック量に単価を掛け算する"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "送信元を Vnet 名から抽出。トラフィック量に単価を掛け算する ",
+        "expandable": true,
+        "expanded": true,
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{vnet_subscription}"
+              ],
+              "parameters": [
+                {
+                  "id": "22290676-db19-4c04-ae4f-b50c1424f499",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "logAnalytics",
+                  "label": "Log Analytics ワークスペース",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "resources\r\n| where type =~ \"microsoft.operationalinsights/workspaces\"",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222/resourceGroups/Management-rg/providers/Microsoft.OperationalInsights/workspaces/kenakay-log"
+                },
+                {
+                  "id": "b0ccee93-852b-4097-8648-9ee6224b87e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "検索範囲",
+                  "type": 4,
+                  "isRequired": true,
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 300000
+                      },
+                      {
+                        "durationMs": 900000
+                      },
+                      {
+                        "durationMs": 1800000
+                      },
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "value": {
+                    "durationMs": 2592000000
+                  }
+                },
+                {
+                  "id": "c3b9f877-6aac-4fe7-b65e-8d79530553e2",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "vnet_subscription",
+                  "label": "Vnet の サブスクリプション",
+                  "type": 6,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": false
+                  },
+                  "value": [
+                    "/subscriptions/c346bcd1-c289-48f0-b15b-d53704339222"
+                  ]
+                },
+                {
+                  "id": "fc6b894c-b2a8-4dec-8555-bc37005ed7e0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SourceIPRange",
+                  "label": "送信元 Vnet 名",
+                  "type": 2,
+                  "description": "送信元 Vnet を選択してください",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.network/virtualnetworks\"\r\n| extend IPAdrdress = properties.addressSpace.addressPrefixes\r\n| project value = IPAdrdress, label = name",
+                  "crossComponentResources": [
+                    "{vnet_subscription}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "10.1.0.0/16"
+                  ]
+                },
+                {
+                  "id": "cffc6f75-2712-4f20-97ea-b77e00eabecd",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "cost_per_bite",
+                  "label": "バイト当たりのコスト",
+                  "type": 1,
+                  "isRequired": true,
+                  "value": "25"
+                }
+              ],
+              "style": "pills",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "パラメーター - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AzureNetworkAnalytics_CL\r\n| where TimeGenerated {TimeRange}\r\n| where FlowStatus_s == \"A\"\r\n| where ipv4_is_in_any_range(SrcIP_s, {SourceIPRange})    // 送信元 IP の指定\r\n| where ipv4_is_in_any_range(DestIP_s, {SourceIPRange}) == false   // 宛先 IP の指定\r\n| summarize OutboundByte_total = sum(OutboundBytes_d) by SrcIP_s, DestIP_s\r\n| extend cost = OutboundByte_total * {cost_per_bite}",
+              "showQuery": true,
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{logAnalytics}"
+              ],
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "SrcIP_s",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "sum_OutboundBytes_d",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "chartSettings": {
+                "xAxis": "DestIP_s"
+              }
+            },
+            "name": "クエリ - 2"
+          }
+        ]
+      },
+      "name": "送信元を Vnet 名から抽出。トラフィック量に単価を掛け算する "
     }
   ],
   "fallbackResourceIds": [
